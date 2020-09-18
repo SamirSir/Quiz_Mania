@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Phrase:</strong>
+  <%= @question.phrase %>
+</p>
+
+<p>
+  <strong>Options:</strong>
+  <%= @question.options %>
+</p>
+
+<p>
+  <strong>Answer:</strong>
+  <%= @question.answer %>
+</p>
+
+<p>
+  <strong>Subject:</strong>
+  <%= Subject.find(@question.subject_id).name %>
+</p>
+
+<%= link_to 'Edit', edit_question_path(@question) %> |
+<%= link_to 'Back', questions_path %>

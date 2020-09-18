@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Score:</strong>
+  <%= @result.score %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= User.find(@result.user_id).email %>
+</p>
+
+<p>
+  <strong>Subject:</strong>
+  <%= Subject.find(@result.subject_id).name %>
+</p>
+
+<%= link_to 'Edit', edit_result_path(@result) %> |
+<%= link_to 'Back', results_path %>

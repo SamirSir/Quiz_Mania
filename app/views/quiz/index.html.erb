@@ -1,0 +1,124 @@
+
+    <div class="row" style="height: 80vh;">
+        <%# subject Name Panel %>
+        <div class="col-md-2 text-white bg-primary text-center py-3" id="subject-title">
+            <h2 class="font-weight-bold"><u>Play Quiz</u></h1>
+            <ul class="list-group subjects">
+            <% @subjects.each do |s| %>
+                <li class="h4 list-group-item bg-info my-1" rel="<%= s.id %>"><%= s.name %></li>
+            <% end %>
+        </div>
+
+        <%# Play Quiz Section %>
+        <div class="col-md-8">
+            <div class="container text-center" id="qstn_ans_panel">
+                <div id="qn_set">
+                    <% label = 0 %>
+                    <% if @selected_sub_id != 0 %>
+                        <% @qa.each_with_index do |q, i| %>
+                            <% if q.subject_id == @selected_sub_id %>
+                                <% label += 1 %>
+                                <div class="my-3 p-2 question_set">
+                                    <label class="question" rel="<%= i+1 %>"><strong><%= label %>. <%= q.phrase %></strong></label><br>
+                                    <% optns = q.options.split(',') %>
+                                    <% optns.each do |optn| %>
+                                        <input type="radio" class="radio-button" name="guess<%= i+1 %>" value="<%= optn %>"><%= optn %> 
+                                    <% end %>
+                                </div>
+                            <% end %>
+                        <% end %>
+                        <button type="submit" class="btn btn-primary" id="check_answer">Check</button>
+                    <% else %>
+                        <div class="" id="initial_panel">
+                        <H1>Select any subjects to play quiz</H1>
+                        </div>
+                    <% end %>
+                </div>
+
+                <div class="hide" id="score_panel">
+                    <p class="display-4"></p> 
+                    <button id="play_again" class="btn btn-success">Play again</button>
+                </div>
+            </div>
+        </div>
+
+        <%# score Board %>
+        <div class="col-md-2 bg-primary text-white">
+            <div class="container" id="score_board">
+                <h4 class="font-weight-bold py-3"> <u>Score Board</u></h4>
+                <div class="overall_score">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+<script type="text/javascript">
+
+    // change subject
+    $("#subject-title .subjects li").on("click", function(){
+        var subject_id = $(this).attr('rel');
+        window.location.href = `/?subject_id=${subject_id}`;
+    }); 
+
+    $("button#check_answer").on("click", function(){
+
+        // cashing qn-ans for controller
+        var guess_list = $('#qn_set').find('.question_set');
+        var qa_list = [];
+        for(let qa of guess_list) {
+            var qa_object = [];
+            var qn_index = parseInt($(qa).find("label.question").attr("rel"));
+            var guess_ans = $(qa).find("input.radio-button:checked").val();
+            qa_object.push(qn_index, guess_ans);
+            qa_list.push(qa_object);
+        }
+
+        // to check answer and get score
+        $.ajax({
+           url: '/quiz/check',
+           type: 'get', 
+           dataType: 'json', 
+           data: {qa_list: qa_list},
+           success: function(response){
+            //    console.log(response);
+                var score = response.score;
+                $("#score_panel").find("p").html("You got <strong class='text-success'>"+score+" correct answer </strong>");
+
+                // params for result creation
+                var queryString = window.location.search;
+                var urlParams = new URLSearchParams(queryString);
+                var subject_id = urlParams.get('subject_id');
+
+                $.ajax({
+                    url: '/quiz/result',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {score: score, subject_id: subject_id},
+                    success: function(data){
+                        console.log(data);
+                        $("#score_board .overall_score").html(`<p>Highscore:${data.max_score}</p> <p>Your Best: ${data.your_best}</p><p>You scored: ${data.score}</p>`);
+
+                    },
+                    error: function(){
+                        console.log("Server error while posting data to Result Table");
+                    },
+                });
+            },
+            error: function(){
+                console.log("network error getting score obtained");
+            }
+        });
+
+        //  to hide the qn panel panel and show score panel
+        $("#score_panel").removeClass("hide");
+        $("#qn_set").slideUp(400);
+        
+    });
+    // to hide the score panel and show qn panel
+    $("#play_again").on("click", function(){
+        $("#qn_set").slideDown(400);
+        $("#score_panel").addClass("hide");
+    });
+</script> 
