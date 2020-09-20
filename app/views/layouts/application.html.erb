@@ -23,7 +23,9 @@
             <% if user_signed_in? &&(current_user.role =="admin" || current_user.role == "teacher") %>
             <%= link_to "Questions", questions_path,  class: 'navbar-item text-light' %>
             <%= link_to "Subject", subjects_path, class: 'navbar-item text-light' %>
+            <% if current_user.role == "admin" %>
             <%= link_to "Score", results_path, class: 'navbar-item text-light' %>
+            <% end %>
             <% end %>
 
             <div class="navbar-text float-right text-light">
@@ -41,14 +43,16 @@
         </div>
       </div>  
       
-      <% if notice %>
-        <p class="alert alert-success" ><%= notice %></p>
-      <% end %>
-      <% if alert %>
-        <p class="alert alert-danger"><%= alert %></p>
-      <% end %>
+      <div>
+        <% if notice %>
+          <p class="alert alert-success" ><%= notice %></p>
+        <% end %>
+        <% if alert %>
+          <p class="alert alert-danger"><%= alert %></p>
+        <% end %>
+      </div>
 
-      <div class="col-md-12">
+      <div class="col-md-12" style="min-height:80vh;">
         <%= yield %>
       </div>
 

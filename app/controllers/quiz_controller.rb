@@ -1,8 +1,10 @@
 class QuizController < ApplicationController
   def index
+
     @subjects = Subject.all
     @selected_sub_id = params[:subject_id].to_i
     @qa = Question.all
+    @random_qn_list = @qa.shuffle
   end
 
   def check
@@ -30,13 +32,6 @@ class QuizController < ApplicationController
 
   def result
 
-    @all_score = Result.pluck("score")
-    @int_score = []
-    @all_score.each do |score|
-      @int_score.push(score.to_i)
-    end
-    @max_score = @int_score.max
-
     @subject_id = params[:subject_id].to_i
     @score = params[:score].to_i
     @user_id = current_user.id
@@ -54,6 +49,14 @@ class QuizController < ApplicationController
         @your_best = @prev_score
       end
     end
+
+    @all_score = Result.pluck("score")
+    @int_score = []
+    @all_score.each do |score|
+      @int_score.push(score.to_i)
+    end
+    @max_score = @int_score.max
+    
     render json: {your_best: @your_best, score: @score, prev_score: @prev_score, max_score: @max_score}
   end
 

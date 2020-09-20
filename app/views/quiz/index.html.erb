@@ -1,5 +1,5 @@
 
-    <div class="row" style="height: 80vh;">
+    <div class="row" style="">
         <%# subject Name Panel %>
         <div class="col-md-2 text-white bg-primary text-center py-3" id="subject-title">
             <h2 class="font-weight-bold"><u>Play Quiz</u></h1>
@@ -10,12 +10,15 @@
         </div>
 
         <%# Play Quiz Section %>
-        <div class="col-md-8">
+        <div class="col-md-8" style="height: 80vh; overflow-y:scroll">
             <div class="container text-center" id="qstn_ans_panel">
                 <div id="qn_set">
                     <% label = 0 %>
                     <% if @selected_sub_id != 0 %>
-                        <% @qa.each_with_index do |q, i| %>
+                    
+                        <h2 class="text-success font-weight-bold mt-2"><%= Subject.find(@selected_sub_id).name.upcase %> QUESTIONS</h2>
+                        <hr>
+                        <% @random_qn_list.each_with_index do |q, i| %>
                             <% if q.subject_id == @selected_sub_id %>
                                 <% label += 1 %>
                                 <div class="my-3 p-2 question_set">
@@ -26,8 +29,8 @@
                                     <% end %>
                                 </div>
                             <% end %>
-                        <% end %>
-                        <button type="submit" class="btn btn-primary" id="check_answer">Check</button>
+                        <% end %>   
+                        <button type="submit" class="btn btn-primary mb-3" id="check_answer">Check</button>
                     <% else %>
                         <div class="" id="initial_panel">
                         <H1>Select any subjects to play quiz</H1>
@@ -97,7 +100,7 @@
                     dataType: 'json',
                     data: {score: score, subject_id: subject_id},
                     success: function(data){
-                        console.log(data);
+                        // console.log(data);
                         $("#score_board .overall_score").html(`<p>Highscore:${data.max_score}</p> <p>Your Best: ${data.your_best}</p><p>You scored: ${data.score}</p>`);
 
                     },
