@@ -17,7 +17,7 @@
     <% @questions.each do |question| %>
       <tr>
         <td><%= question.phrase %></td>
-        <td><%= question.options %></td>
+        <td><%= question.options.html_safe %></td>
         <td><%= question.answer %></td>
         <td><%= Subject.find(question.subject_id).name %></td>
         <td><%= link_to 'Show', question %></td>

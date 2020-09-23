@@ -30,7 +30,10 @@
 
             <div class="navbar-text float-right text-light">
               <% if user_signed_in? %>
-                <strong><%= current_user.email.split('@').first %> | role: <%= current_user.role %></strong>
+                <strong><%= current_user.email.split('@').first %>(<%= current_user.role %>)</strong> | 
+                <% if current_user.admin? %>
+                  <strong> <%= link_to "Admin Panel", rails_admin_path, class: 'navbar-item text-light' %></strong>
+                <% end %>
                 <%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-item text-light' %> |
                 <%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-item text-light'  %>
               <% else %>

@@ -6,6 +6,7 @@ ruby '2.7.0'
 # custom gem
 gem 'hirb'
 gem 'devise'
+gem 'rails_admin'
 # end custom gem
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'

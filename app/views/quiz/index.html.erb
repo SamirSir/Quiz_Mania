@@ -1,4 +1,4 @@
-
+<%# https://altalogy.com/blog/rails-6-user-accounts-with-3-types-of-roles/ %>
     <div class="row" style="">
         <%# subject Name Panel %>
         <div class="col-md-2 text-white bg-primary text-center py-3" id="subject-title">
@@ -12,10 +12,9 @@
         <%# Play Quiz Section %>
         <div class="col-md-8" style="height: 80vh; overflow-y:scroll">
             <div class="container text-center" id="qstn_ans_panel">
-                <div id="qn_set">
+                <div id="qn_set">   
                     <% label = 0 %>
                     <% if @selected_sub_id != 0 %>
-                    
                         <h2 class="text-success font-weight-bold mt-2"><%= Subject.find(@selected_sub_id).name.upcase %> QUESTIONS</h2>
                         <hr>
                         <% @random_qn_list.each_with_index do |q, i| %>
@@ -25,7 +24,7 @@
                                     <label class="question" rel="<%= i+1 %>"><strong><%= label %>. <%= q.phrase %></strong></label><br>
                                     <% optns = q.options.split(',') %>
                                     <% optns.each do |optn| %>
-                                        <input type="radio" class="radio-button" name="guess<%= i+1 %>" value="<%= optn %>"><%= optn %> 
+                                        <input type="radio" class="radio-button" name="guess<%= i+1 %>" value="<%= optn %>"><%= optn.html_safe %> &nbsp;&nbsp;
                                     <% end %>
                                 </div>
                             <% end %>
